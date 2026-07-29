@@ -5,3 +5,11 @@
 
 [functions]
   node_bundler = "esbuild"
+
+# Single-page app: every route (/admin, /module/xyz, etc.) needs to serve
+# index.html and let React Router handle it client-side, otherwise Netlify
+# 404s on any URL that isn't a real file.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
