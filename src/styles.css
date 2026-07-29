@@ -317,6 +317,116 @@ button:active{ transform:scale(0.98); }
 }
 
 /* ==========================================================================
+   Global nav header — back button, brand, hamburger. Sticky (not fixed) so
+   it pushes content down naturally rather than needing manual offset hacks.
+   ========================================================================== */
+.nav-header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  padding:0.6rem 0.9rem;
+  padding-top:calc(0.6rem + env(safe-area-inset-top));
+}
+.nav-back-btn{
+  background:transparent;
+  color:var(--teal);
+  border:none;
+  padding:0.4rem 0.5rem;
+  min-height:var(--tap-min);
+  text-transform:none;
+  letter-spacing:normal;
+  font-weight:600;
+  font-size:0.9rem;
+}
+.nav-back-spacer{ width:44px; }
+.nav-brand{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  text-decoration:none;
+  color:var(--ink);
+  font-family:'Barlow Condensed', sans-serif;
+  text-transform:uppercase;
+  font-weight:700;
+  letter-spacing:0.02em;
+  font-size:0.95rem;
+}
+.nav-hamburger-btn{
+  background:transparent;
+  border:none;
+  color:var(--ink);
+  font-size:1.4rem;
+  min-width:var(--tap-min);
+  min-height:var(--tap-min);
+  padding:0;
+}
+
+.nav-drawer-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  z-index:60;
+  display:flex;
+  justify-content:flex-end;
+}
+.nav-drawer{
+  width:82%;
+  max-width:320px;
+  height:100%;
+  background:#fff;
+  padding:1rem 1.1rem calc(1.5rem + env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+}
+.nav-drawer-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-family:'Barlow Condensed', sans-serif;
+  text-transform:uppercase;
+  font-weight:700;
+  color:var(--teal);
+  letter-spacing:0.02em;
+  margin-bottom:1rem;
+  padding-top:env(safe-area-inset-top);
+}
+.nav-drawer-close{
+  background:transparent;
+  border:none;
+  font-size:1.2rem;
+  color:var(--muted);
+  min-width:var(--tap-min);
+  min-height:var(--tap-min);
+}
+.nav-drawer-list{ list-style:none; margin:0; padding:0; flex:1; }
+.nav-drawer-list li{ margin-bottom:0.4rem; }
+.nav-drawer-link{
+  display:block;
+  min-height:var(--tap-min);
+  display:flex;
+  align-items:center;
+  padding:0.6rem 0.7rem;
+  border-radius:8px;
+  text-decoration:none;
+  color:var(--ink);
+  font-weight:500;
+}
+.nav-drawer-link:hover{ background:var(--paper); }
+.nav-drawer-logout{
+  width:100%;
+  background:transparent;
+  border:1px solid var(--line);
+  color:#B23A3A;
+  margin-top:1rem;
+}
+
+/* ==========================================================================
    Comprehension check (post-module confidence self-score)
    ========================================================================== */
 .comprehension-check .prompt{ font-weight:500; }

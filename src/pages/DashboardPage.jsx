@@ -4,19 +4,15 @@ import { electiveDeadline } from "../data/elective-schedule";
 import { useAuth } from "../lib/AuthContext";
 
 export default function DashboardPage() {
-  const { profile, logout } = useAuth();
+  const { profile } = useAuth();
 
   return (
     <div className="dashboard-page">
       <header className="dashboard-header">
-        <div className="dashboard-header-left">
-          <img src="/logo.svg" alt="" className="brand-logo brand-logo-small" />
-          <div>
-            <p className="dashboard-greeting">Hi{profile?.displayName ? `, ${profile.displayName.split(" ")[0]}` : ""}</p>
-            <h1>Your Course</h1>
-          </div>
+        <div>
+          <p className="dashboard-greeting">Hi{profile?.displayName ? `, ${profile.displayName.split(" ")[0]}` : ""}</p>
+          <h1>Your Course</h1>
         </div>
-        <button className="logout-btn" onClick={logout}>Log out</button>
       </header>
 
       <Link to="/calendar" className="calendar-link-banner">

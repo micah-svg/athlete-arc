@@ -9,6 +9,7 @@ import TechnicalWeekPage from "./pages/TechnicalWeekPage";
 import MyQuestionsPage from "./pages/MyQuestionsPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import AdminResourcesPage from "./pages/AdminResourcesPage";
+import AdminStudentsPage from "./pages/AdminStudentsPage";
 import { technicalTrackById } from "./data/modules/technical-track-index";
 import ModulePage from "./pages/ModulePage";
 import AdminRosterPage from "./pages/AdminRosterPage";
@@ -18,6 +19,7 @@ import AdminProgressPage from "./pages/AdminProgressPage";
 import AdminResponseReviewPage from "./pages/AdminResponseReviewPage";
 import AdminQuestionsPage from "./pages/AdminQuestionsPage";
 import AskQuestionButton from "./components/AskQuestionButton";
+import NavHeader from "./components/NavHeader";
 import { allModulesById } from "./data/course-structure";
 
 function ModuleRoute() {
@@ -46,6 +48,7 @@ function RequireAuth({ children }) {
 export default function App() {
   return (
     <>
+      <NavHeader />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin" element={<AdminHomePage />} />
@@ -55,6 +58,7 @@ export default function App() {
         <Route path="/admin-responses" element={<AdminResponseReviewPage />} />
         <Route path="/admin-questions" element={<AdminQuestionsPage />} />
         <Route path="/admin-resources" element={<AdminResourcesPage />} />
+        <Route path="/admin-students" element={<AdminStudentsPage />} />
         <Route
           path="/"
           element={

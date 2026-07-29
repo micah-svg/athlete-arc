@@ -8,6 +8,7 @@ export default function AdminHomePage() {
         <h1>Coach Tools</h1>
         <ul className="module-list">
           <li><Link className="module-list-item" to="/admin-roster">Create Student Accounts</Link></li>
+          <li><Link className="module-list-item" to="/admin-students">Students</Link></li>
           <li><Link className="module-list-item" to="/admin-modules">Edit Course Content</Link></li>
           <li><Link className="module-list-item" to="/admin-progress">Team Progress</Link></li>
           <li><Link className="module-list-item" to="/admin-responses">Review Responses</Link></li>

@@ -41,10 +41,25 @@ exports.handler = async (event) => {
       return { statusCode: 200, body: JSON.stringify({ students }) };
     }
 
+    if (action === "reset-password") {
+      const { uid, newPassword } = payload;
+      if (!uid || !newPassword) {
+        return { statusCode: 400, body: "uid and newPassword are required" };
+      }
+      await admin.auth().updateUser(uid, { password: newPassword });
+      return { statusCode: 200, body: JSON.stringify({ status: "password-reset" }) };
+    }
+
     if (action === "list-submissions") {
       const snap = await db.collection("submissions").get();
       const submissions = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       return { statusCode: 200, body: JSON.stringify({ submissions }) };
+    }
+
+    if (action === "get-module") {
+      const { moduleId } = payload;
+      const snap = await db.collection("modules").doc(moduleId).get();
+      return { statusCode: 200, body: JSON.stringify({ content: snap.exists ? snap.data() : null }) };
     }
 
     if (action === "save-module") {

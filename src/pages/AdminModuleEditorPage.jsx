@@ -1,20 +1,54 @@
 import { useEffect, useState } from "react";
 import AdminGate, { getStoredAdminSecret } from "../components/AdminGate";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { allElectiveModules, allModulesById } from "../data/course-structure";
+
+async function callAdmin(action, payload) {
+  const res = await fetch("/.netlify/functions/admin-data", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ adminSecret: getStoredAdminSecret(), action, payload }),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || `Request failed (${res.status})`);
+  }
+  return res.json();
+}
 
 function ModuleEditor({ moduleId, onSaved }) {
   const [content, setContent] = useState(null);
+  const [loadError, setLoadError] = useState("");
   const [status, setStatus] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+    setContent(null);
+    setLoadError("");
+
     (async () => {
-      const fallback = allModulesById[moduleId];
-      const snap = await getDoc(doc(db, "modules", moduleId));
-      setContent(snap.exists() ? { ...fallback, ...snap.data() } : structuredClone(fallback));
+      try {
+        const fallback = allModulesById[moduleId];
+        const { content: liveContent } = await callAdmin("get-module", { moduleId });
+        if (cancelled) return;
+        setContent(liveContent ? { ...fallback, ...liveContent } : structuredClone(fallback));
+      } catch (err) {
+        if (!cancelled) setLoadError(err.message || "Couldn't load this module.");
+      }
     })();
+
+    return () => { cancelled = true; };
   }, [moduleId]);
+
+  if (loadError) {
+    return (
+      <div className="card">
+        <p>Couldn't load this module: {loadError}</p>
+        <p style={{ color: "var(--muted)", fontSize: "0.85rem" }}>
+          Double check your admin secret is correct, then try again.
+        </p>
+      </div>
+    );
+  }
 
   if (!content) return <p>Loading module...</p>;
 
@@ -31,17 +65,13 @@ function ModuleEditor({ moduleId, onSaved }) {
 
   async function handleSave() {
     setStatus("Saving...");
-    const res = await fetch("/.netlify/functions/admin-data", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        adminSecret: getStoredAdminSecret(),
-        action: "save-module",
-        payload: { moduleId, content },
-      }),
-    });
-    setStatus(res.ok ? "Saved." : "Error saving, check the admin secret.");
-    if (res.ok) onSaved?.();
+    try {
+      await callAdmin("save-module", { moduleId, content });
+      setStatus("Saved.");
+      onSaved?.();
+    } catch (err) {
+      setStatus(`Error saving: ${err.message}`);
+    }
   }
 
   return (
