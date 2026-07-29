@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Students can read/write only their own profile and submissions.
+    // Nobody can read another student's data, including other students.
+    match /students/{studentId} {
+      allow read: if request.auth != null && request.auth.uid == studentId;
+      allow write: if false; // profile docs are only written by the admin function
+    }
+
+    match /submissions/{submissionId} {
+      allow read, write: if request.auth != null
+        && request.resource.data.studentId == request.auth.uid;
+      allow read: if request.auth != null
+        && resource.data.studentId == request.auth.uid;
+    }
+
+    // Course content. Any logged-in student can read it (that's how the app
+    // displays lessons). Nobody writes it from the client — edits only
+    // happen through the admin-data function, which uses the Admin SDK and
+    // bypasses these rules entirely.
+    match /modules/{moduleId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Student questions. Any logged-in student can submit one (as
+    // themselves), but can't read the list back — that's for the coach only,
+    // via the admin function. Resolving/deleting also only happens there.
+    match /questions/{questionId} {
+      allow create: if request.auth != null
+        && request.resource.data.studentId == request.auth.uid;
+      allow read: if request.auth != null
+        && resource.data.studentId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Resources (links, notes, materials the coach shares). Any logged-in
+    // student can read the list; only the admin function can add/edit/remove.
+    match /resources/{resourceId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}
