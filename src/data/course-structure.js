@@ -1,7 +1,7 @@
-import { unit1Modules } from "./unit1-index";
-import { unit2Modules } from "./unit2-index";
-import { unit3Modules } from "./unit3-index";
-import { electiveModules } from "./electives-index";
+import { unit1Modules } from "./modules/unit1-index";
+import { unit2Modules } from "./modules/unit2-index";
+import { unit3Modules } from "./modules/unit3-index";
+import { electiveModules } from "./modules/electives-index";
 
 // Everything except the technical track is now a single elective pool, all
 // due by the same deadline (see elective-schedule.js). Grouped headers are
